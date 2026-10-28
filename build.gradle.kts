@@ -33,6 +33,7 @@ dependencies {
 
 	// Spring AI 의존성
 	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
+	implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
 	
 	// Swagger/OpenAPI 의존성
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
