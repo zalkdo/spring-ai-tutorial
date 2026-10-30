@@ -32,9 +32,10 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
 	// Spring AI 의존성
+	implementation("org.springframework.ai:spring-ai-starter-model-google-genai:1.1.0-M1")
+	implementation("org.springframework.ai:spring-ai-google-genai")
 	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
-	implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
-	
+
 	// Swagger/OpenAPI 의존성
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 

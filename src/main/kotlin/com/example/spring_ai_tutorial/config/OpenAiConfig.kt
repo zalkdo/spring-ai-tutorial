@@ -16,6 +16,9 @@ class OpenAiConfig {
     @Value("\${spring.ai.openai.api-key}")
     private lateinit var apiKey: String
 
+    @Value("\${spring.ai.google.genai.api-key}")
+    private lateinit var geminiKey: String
+
     /**
      * OpenAI API 클라이언트 빈 등록
      */
@@ -24,6 +27,17 @@ class OpenAiConfig {
         logger.debug { "OpenAI API 클라이언트 초기화" }
         return OpenAiApi.builder()
             .apiKey(apiKey)
+            .build()
+    }
+
+    /**
+     * Google Gemini API 클라이언트 빈 등록
+     */
+    @Bean
+    fun googleGeminiApi(): OpenAiApi {
+        logger.debug { "Google Gemini 클라이언트 초기화" }
+        return OpenAiApi.builder()
+            .apiKey(geminiKey)
             .build()
     }
 }
