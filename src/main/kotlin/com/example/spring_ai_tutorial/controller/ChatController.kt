@@ -43,7 +43,7 @@ class ChatController(
     suspend fun sendMessage(
         @Parameter(description = "채팅 요청 객체", required = true)
         @RequestBody request: ChatRequest
-    ): ResponseEntity<ApiResponse<Map<String, Any>>> {
+    ): ResponseEntity<out ApiResponse<out Map<String, String?>>> {
         logger.info { "Chat API 요청 받음: model=${request.model}" }
 
         // 유효성 검사
@@ -99,8 +99,8 @@ data class ChatRequest(
     @Schema(description = "사용자 질문", example = "안녕하세요")
     val query: String,
 
-    @Schema(description = "사용할 LLM 모델", example = "gpt-3.5-turbo", defaultValue = "gpt-3.5-turbo")
-    val model: String = "gpt-3.5-turbo"
+    @Schema(description = "사용할 LLM 모델", example = "gpt-3.5-turbo", defaultValue = "gemini-2.0-flash")
+    val model: String = "gemini-2.0-flash"
 )
 
 @Schema(description = "API 응답 포맷")
