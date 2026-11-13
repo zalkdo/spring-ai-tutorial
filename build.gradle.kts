@@ -16,7 +16,11 @@ java {
 
 repositories {
 	mavenCentral()
+	// 🟢 이 주소가 주입되어 있어야 1.0.0-M3 라이브러리를 가져옵니다!
+	maven { url = uri("https://repo.spring.io/milestone") }
+	maven { url = uri("https://spring.io") }
 }
+
 
 extra["springAiVersion"] = "1.0.0-M6"
 
@@ -27,7 +31,12 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+	// 코루틴 의존성
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
 	// Spring AI 의존성
+//	implementation("org.springframework.ai:spring-ai-starter-model-google-genai:1.1.0-M1")
 	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
 
 	// PDF 처리 라이브러리

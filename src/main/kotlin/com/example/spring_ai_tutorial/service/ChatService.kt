@@ -1,6 +1,8 @@
 package com.example.spring_ai_tutorial.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.ai.chat.messages.SystemMessage
 import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.model.ChatResponse
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ChatService(
-    private val openAiApi: OpenAiApi
+    private val googleGeminiApi: OpenAiApi
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -27,11 +29,11 @@ class ChatService(
      * @param model 사용할 LLM 모델명
      * @return 챗 응답 객체, 오류 시 null
      */
-    fun openAiChat(
+    suspend fun openAiChat(
         userInput: String,
         systemMessage: String,
-        model: String = "gpt-3.5-turbo"
-    ): ChatResponse? {
+        model: String = "gemini-3.8-flash" //"gpt-3.5-turbo"
+    ): ChatResponse? = withContext(Dispatchers.IO) {
         logger.debug { "OpenAI 챗 호출 시작 - 모델: $model" }
         try {
             // 메시지 구성
@@ -39,10 +41,10 @@ class ChatService(
                 SystemMessage(systemMessage),
                 UserMessage(userInput)
             )
-
             // 챗 옵션 설정
             val chatOptions = ChatOptions.builder()
                 .model(model)
+                .temperature(0.7)
                 .build()
 
             // 프롬프트 생성
@@ -50,13 +52,13 @@ class ChatService(
 
             // 챗 모델 생성 및 호출
             val chatModel = OpenAiChatModel.builder()
-                .openAiApi(openAiApi)
+                .openAiApi(googleGeminiApi)
                 .build()
 
-            return chatModel.call(prompt)
+            return@withContext chatModel.call(prompt)
         } catch (e: Exception) {
             logger.error(e) { "OpenAI 챗 호출 중 오류 발생: ${e.message}" }
-            return null
+            return@withContext null
         }
     }
 }

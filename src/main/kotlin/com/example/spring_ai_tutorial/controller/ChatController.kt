@@ -42,10 +42,11 @@ class ChatController(
     @SwaggerResponse(responseCode = "400", description = "잘못된 요청")
     @SwaggerResponse(responseCode = "500", description = "서버 오류")
     @PostMapping("/query")
-    fun sendMessage(
+    suspend fun sendMessage(
         @Parameter(description = "채팅 요청 객체", required = true)
         @RequestBody request: ChatRequestDto
     ): ResponseEntity<ApiResponseDto<Map<String, Any>>> {
+
         logger.info { "Chat API 요청 받음: model=${request.model}" }
 
         // 유효성 검사
@@ -95,3 +96,25 @@ class ChatController(
         }
     }
 }
+
+@Schema(description = "채팅 요청 데이터 모델")
+data class ChatRequest(
+    @Schema(description = "사용자 질문", example = "안녕하세요")
+    val query: String,
+
+    @Schema(description = "사용할 LLM 모델", example = "gpt-3.5-turbo", defaultValue = "gemini-2.0-flash")
+    val model: String = "gemini-2.0-flash"
+)
+
+@Schema(description = "API 응답 포맷")
+data class ApiResponse<T>(
+    @Schema(description = "요청 처리 성공 여부")
+    val success: Boolean,
+
+    @Schema(description = "성공 응답 데이터")
+    val data: T? = null,
+
+    @Schema(description = "실패 오류 메시지")
+    val error: String? = null
+)
+
