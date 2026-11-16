@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class EmbeddingService(
-    private val openAiApi: OpenAiApi
+    private val googleGeminiApi: OpenAiApi
 ) {
     @Value("\${spring.ai.openai.embedding.options.model}")
     private lateinit var embeddingModelName: String
@@ -22,7 +22,7 @@ class EmbeddingService(
     // OpenAI 임베딩 모델 설정
     val embeddingModel by lazy {
         OpenAiEmbeddingModel(
-            openAiApi,
+            googleGeminiApi,
             MetadataMode.EMBED,
             OpenAiEmbeddingOptions.builder()
                 .model(embeddingModelName)

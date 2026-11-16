@@ -5,9 +5,16 @@ import org.springframework.ai.openai.api.OpenAiApi
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpHeaders
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.http.client.support.HttpRequestWrapper
+import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestClient
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.net.URI
+import java.nio.charset.StandardCharsets
+
 
 /**
  * OpenAI API 설정
@@ -56,6 +63,31 @@ class OpenAiConfig {
                     execution.execute(modifiedRequest, body)
                 }else{
                     execution.execute(request, body)
+                }
+
+                val response = execution.execute(request, body)
+                val responseBytes = StreamUtils.copyToByteArray(response.body)
+                var responseBody = String(responseBytes, StandardCharsets.UTF_8)
+
+
+                // 응답 JSON에 usage 필드가 없으면 기본값을 추가
+                if (responseBody.contains("\"data\"") && !responseBody.contains("\"usage\"")) {
+                    responseBody = responseBody.replaceFirst(
+                        Regex("\\}\\s*$"),
+                        ""","usage":{"prompt_tokens":0,"total_tokens":0}}"""
+                    )
+                }
+
+                val modifiedBytes = responseBody.toByteArray(StandardCharsets.UTF_8)
+                object : ClientHttpResponse by response {
+                    override fun getBody(): InputStream = ByteArrayInputStream(modifiedBytes)
+
+                    override fun getHeaders(): HttpHeaders {
+                        return HttpHeaders().apply {
+                            putAll(response.headers)
+                            contentLength = modifiedBytes.size.toLong()
+                        }
+                    }
                 }
             }
 

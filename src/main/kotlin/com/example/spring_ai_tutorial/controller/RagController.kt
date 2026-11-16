@@ -25,7 +25,9 @@ import java.io.IOException
 @RestController
 @RequestMapping("/api/v1/rag")
 @Tag(name = "RAG API", description = "Retrieval-Augmented Generation 기능을 위한 API")
-class RagController(private val ragService: RagService) {
+class RagController(
+    private val ragService: RagService
+) {
     private val logger = KotlinLogging.logger {}
 
     /**
@@ -118,7 +120,7 @@ class RagController(private val ragService: RagService) {
     @SwaggerResponse(responseCode = "400", description = "잘못된 요청")
     @SwaggerResponse(responseCode = "500", description = "서버 오류")
     @PostMapping("/query")
-    fun queryWithRag(
+    suspend fun queryWithRag(
         @Parameter(description = "질의 요청 객체", required = true)
         @RequestBody request: QueryRequestDto
     ): ResponseEntity<ApiResponseDto<QueryResponseDto>> {
