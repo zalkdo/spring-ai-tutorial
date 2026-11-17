@@ -102,7 +102,7 @@ data class ChatRequest(
     @Schema(description = "사용자 질문", example = "안녕하세요")
     val query: String,
 
-    @Schema(description = "사용할 LLM 모델", example = "gpt-3.5-turbo", defaultValue = "gemini-2.0-flash")
+    @Schema(description = "사용할 LLM 모델", example = "gemini-3.1-flash", defaultValue = "gpt-3.5-turbo")
     val model: String = "gemini-2.0-flash"
 )
 
